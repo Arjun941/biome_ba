@@ -18,7 +18,10 @@ from app.config import config_map, DevelopmentConfig
 logger = logging.getLogger(__name__)
 
 
+from dotenv import load_dotenv
+
 def create_app(config_name: str = None) -> Flask:
+    load_dotenv()  # Load .env variables if present
     """
     Application factory.
 
