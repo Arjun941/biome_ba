@@ -24,13 +24,8 @@ logger = logging.getLogger(__name__)
 # ── Preprocessing constants (loaded from config.json) ──────────────────────────
 _BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-_cfg_path = os.environ.get("ML_CONFIG_PATH", "config.json")
-if not os.path.isabs(_cfg_path):
-    _cfg_path = os.path.join(_BASE_DIR, _cfg_path)
-
-_model_path = os.environ.get("ML_MODEL_PATH", "model_fp16.onnx")
-if not os.path.isabs(_model_path):
-    _model_path = os.path.join(_BASE_DIR, _model_path)
+_cfg_path = os.environ.get("ML_CONFIG_PATH", os.path.join(_BASE_DIR, "config.json"))
+_model_path = os.environ.get("ML_MODEL_PATH", os.path.join(_BASE_DIR, "model_fp16.onnx"))
 
 # Load config at module level so LABEL_NAMES is always available
 with open(_cfg_path, encoding="utf-8") as _f:
