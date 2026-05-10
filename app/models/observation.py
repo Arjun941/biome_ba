@@ -18,6 +18,7 @@ def new_observation(
     latitude: float,
     longitude: float,
     ai_predictions: List[Dict],
+    username: str = "",
     rarity_score: float = 0.0,
     rarity_tier: str = "Common",
     habitat_tags: Optional[List[str]] = None,
@@ -30,6 +31,7 @@ def new_observation(
     """Factory — returns a new observation document ready for insertion."""
     return {
         "user_id": user_id,
+        "username": username,
         "selected_species": selected_species,
         # Store top-5 AI predictions alongside the user's selection
         "ai_predictions": ai_predictions,

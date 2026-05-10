@@ -111,6 +111,7 @@ def create_observation(current_user):
 
     doc = new_observation(
         user_id=current_user["_id"],
+        username=current_user.get("username", ""),
         selected_species=species,
         image_base64=validated["image_base64"],
         latitude=validated["latitude"],
@@ -327,3 +328,40 @@ def like_observation(current_user, obs_id: str):
                 ref_type="observation",
             )
         return jsonify({"liked": True}), 200
+
+
+# ── GET /observations/map ──────────────────────────────────────────────────────
+@bp.get("/observations/map")
+def get_map_observations():
+    """
+    Return recent observations for map display.
+    Excludes image_base64 for fast transfer.
+    Query params: limit (default 300, max 500)
+    """
+    try:
+        limit = min(int(request.args.get("limit", 300)), 500)
+    except (TypeError, ValueError):
+        limit = 300
+
+    docs = list(
+        db.observations.find(
+            {},
+            {
+                "_id": 1,
+                "selected_species": 1,
+                "geolocation": 1,
+                "username": 1,
+                "user_id": 1,
+                "rarity_tier": 1,
+                "rarity_score": 1,
+                "timestamp": 1,
+                "country": 1,
+                "state": 1,
+                "habitat_tags": 1,
+            },
+        )
+        .sort("timestamp", -1)
+        .limit(limit)
+    )
+
+    return jsonify({"observations": [serialize_observation(doc) for doc in docs]}), 200

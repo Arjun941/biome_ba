@@ -91,8 +91,10 @@ def get_feed(current_user):
     """
     page, limit, skip = get_pagination_params(default_limit=20)
 
-    if current_user:
-        following_ids = current_user.get("following", [])
+    # Default to global feed; pass ?following_only=true for personalised feed
+    following_only = request.args.get("following_only", "false").lower() == "true"
+    if current_user and following_only:
+        following_ids = list(current_user.get("following", []))
         following_ids.append(current_user["_id"])
         query = {"user_id": {"$in": following_ids}, "is_deleted": False}
     else:
