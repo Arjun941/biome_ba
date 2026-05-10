@@ -132,8 +132,19 @@ def validate_post_payload(data: Dict) -> Dict:
         raise ValueError("Post content must be 2000 characters or fewer.")
     if image_b64:
         validate_base64_image(image_b64)
-    return {
+
+    result: Dict = {
         "content": content[:2000],
         "image_base64": image_b64,
         "referenced_observations": data.get("referenced_observations", []),
+        "selected_species": str(data.get("selected_species", ""))[:200],
     }
+
+    lat, lng = data.get("latitude"), data.get("longitude")
+    if lat is not None and lng is not None:
+        try:
+            result["latitude"], result["longitude"] = validate_geolocation(lat, lng)
+        except ValueError:
+            pass  # Ignore invalid coords rather than rejecting the whole post
+
+    return result

@@ -60,6 +60,9 @@ def create_post(current_user):
         content=validated["content"],
         image_base64=validated.get("image_base64", ""),
         referenced_observations=ref_obs,
+        selected_species=validated.get("selected_species", ""),
+        latitude=validated.get("latitude"),
+        longitude=validated.get("longitude"),
     )
 
     result = db.posts.insert_one(doc)
@@ -109,6 +112,22 @@ def get_feed(current_user):
     )
 
     return jsonify(paginate_response(docs, total, page, limit, serialize_post)), 200
+
+
+# ── GET /posts/map ────────────────────────────────────────────────────────────
+@bp.get("/map")
+def get_map_posts():
+    """Return posts that have a location, for map display. No images included."""
+    limit = min(int(request.args.get("limit", 300)), 500)
+    docs = list(db.posts.find(
+        {"latitude": {"$exists": True, "$ne": None}, "is_deleted": False},
+        {
+            "_id": 1, "username": 1, "content": 1, "selected_species": 1,
+            "latitude": 1, "longitude": 1, "has_image": 1,
+            "created_at": 1, "like_count": 1,
+        },
+    ).sort("created_at", -1).limit(limit))
+    return jsonify({"posts": [serialize_post(doc) for doc in docs]}), 200
 
 
 # ── GET /posts/<id> ────────────────────────────────────────────────────────────

@@ -17,6 +17,9 @@ def new_post(
     username: str = "",
     image_base64: str = "",
     referenced_observations: Optional[List[ObjectId]] = None,
+    selected_species: str = "",
+    latitude: Optional[float] = None,
+    longitude: Optional[float] = None,
 ) -> Dict[str, Any]:
     """Factory — returns a new post document."""
     return {
@@ -25,6 +28,9 @@ def new_post(
         "content": content,
         "image_base64": image_base64,
         "has_image": bool(image_base64),
+        "selected_species": selected_species,
+        "latitude": latitude,
+        "longitude": longitude,
         "referenced_observations": referenced_observations or [],
         # Reactions stored as {emoji: [user_id, ...]}
         "reactions": {},
