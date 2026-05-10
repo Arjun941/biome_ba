@@ -56,6 +56,7 @@ def create_post(current_user):
 
     doc = new_post(
         user_id=current_user["_id"],
+        username=current_user.get("username", ""),
         content=validated["content"],
         image_base64=validated.get("image_base64", ""),
         referenced_observations=ref_obs,

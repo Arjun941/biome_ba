@@ -14,14 +14,17 @@ from bson import ObjectId
 def new_post(
     user_id: ObjectId,
     content: str,
+    username: str = "",
     image_base64: str = "",
     referenced_observations: Optional[List[ObjectId]] = None,
 ) -> Dict[str, Any]:
     """Factory — returns a new post document."""
     return {
         "user_id": user_id,
+        "username": username,
         "content": content,
         "image_base64": image_base64,
+        "has_image": bool(image_base64),
         "referenced_observations": referenced_observations or [],
         # Reactions stored as {emoji: [user_id, ...]}
         "reactions": {},
