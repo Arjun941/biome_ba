@@ -100,7 +100,7 @@ def get_feed(current_user):
 
     total = db.posts.count_documents(query)
     docs = list(
-        db.posts.find(query, {"image_base64": 0})
+        db.posts.find(query)
         .sort("created_at", -1)
         .skip(skip)
         .limit(limit)
