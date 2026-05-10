@@ -18,10 +18,7 @@ from app.config import config_map, DevelopmentConfig
 logger = logging.getLogger(__name__)
 
 
-from dotenv import load_dotenv
-
 def create_app(config_name: str = None) -> Flask:
-    load_dotenv()  # Load .env variables if present
     """
     Application factory.
 
@@ -177,6 +174,7 @@ def _register_blueprints(app: Flask) -> None:
     from app.routes.leaderboard import bp as leaderboard_bp
     from app.routes.social import bp as social_bp
     from app.routes.search import bp as search_bp
+    from app.routes.test_ui import test_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(profile_bp)
@@ -185,6 +183,7 @@ def _register_blueprints(app: Flask) -> None:
     app.register_blueprint(leaderboard_bp)
     app.register_blueprint(social_bp)
     app.register_blueprint(search_bp)
+    app.register_blueprint(test_bp)
 
     # Health check at root
     @app.get("/health")
@@ -289,4 +288,5 @@ def _init_swagger(app: Flask) -> None:
     }
 
     Swagger(app, config=swagger_config, template=template)
+    logger.info("Swagger UI available at /apidocs")
     logger.info("Swagger UI available at /apidocs")

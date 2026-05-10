@@ -23,6 +23,6 @@ flasgger>=0.9.7.1         # Swagger UI at /apidocs
 
 # ── Utilities ────────────────────────────────────────────────────────────────
 python-dotenv>=1.0.0      # .env file support
-certifi>=2024.2.2          # Required for SSL certificates in some environments
+
 # ── Production Server ─────────────────────────────────────────────────────────
 gunicorn>=21.2.0          # WSGI server for production
